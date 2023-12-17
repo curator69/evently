@@ -1,4 +1,6 @@
+import CategoryFilter from "@/components/shared/CategoryFilter";
 import Collection from "@/components/shared/Collection";
+import Search from "@/components/shared/Search";
 import { Button } from "@/components/ui/button";
 import { getAllEvents } from "@/lib/actions/event.actions";
 import { SearchParamProps } from "@/types";
@@ -16,6 +18,7 @@ export default async function Home({ searchParams }: SearchParamProps) {
     page,
     limit: 6,
   });
+
   return (
     <>
       <section className="bg-primary-50 bg-dotted-pattern bg-contain py-5 md:py-10">
@@ -52,8 +55,8 @@ export default async function Home({ searchParams }: SearchParamProps) {
         </h2>
 
         <div className="flex w-full flex-col gap-5 md:flex-row">
-          {/* <Search />
-          <CategoryFilter /> */}
+          <Search />
+          <CategoryFilter />
         </div>
 
         <Collection
