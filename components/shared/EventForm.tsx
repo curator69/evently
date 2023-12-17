@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -13,19 +12,22 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { eventFormSchema } from "@/lib/validator";
+import * as z from "zod";
 import { eventDefaultValues } from "@/constants";
 import Dropdown from "./Dropdown";
+import { Textarea } from "@/components/ui/textarea";
 import { FileUploader } from "./FileUploader";
 import { useState } from "react";
 import Image from "next/image";
 import DatePicker from "react-datepicker";
-import { Checkbox } from "../ui/checkbox";
 import { useUploadThing } from "@/lib/uploadthing";
-import { createEvent, updateEvent } from "@/lib/actions/event.actions";
+
+import "react-datepicker/dist/react-datepicker.css";
+import { Checkbox } from "../ui/checkbox";
 import { useRouter } from "next/navigation";
+import { createEvent, updateEvent } from "@/lib/actions/event.actions";
 import { IEvent } from "@/lib/database/models/event.model";
 
 type EventFormProps = {
@@ -37,10 +39,15 @@ type EventFormProps = {
 
 const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
   const [files, setFiles] = useState<File[]>([]);
-
+  const initialValues =
+    event && type === "Update"
+      ? {
+          ...event,
+          startDateTime: new Date(event.startDateTime),
+          endDateTime: new Date(event.endDateTime),
+        }
+      : eventDefaultValues;
   const router = useRouter();
-
-  const initialValues = eventDefaultValues;
 
   const { startUpload } = useUploadThing("imageUploader");
 
@@ -48,8 +55,6 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
     resolver: zodResolver(eventFormSchema),
     defaultValues: initialValues,
   });
-
-  console.log(userId);
 
   async function onSubmit(values: z.infer<typeof eventFormSchema>) {
     let uploadedImageUrl = values.imageUrl;
@@ -127,7 +132,6 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="categoryId"
@@ -162,7 +166,6 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="imageUrl"
@@ -327,7 +330,6 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="url"
